@@ -4,6 +4,7 @@ using api;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using DotNetEnv;
+using api.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,7 @@ app.MapGet("/", () => "Take Them Down API is Running");
 app.MapGet("/logs", async (Database db) =>
 {
     //SQL
-    var sql = "";
+    var sql = "SELECT [KnownId], [IsAllied] FROM [dbo].[Known]";
 
     //Execute
     var rows = await db.ExecuteQueryAsync(sql);
@@ -35,16 +36,16 @@ app.MapGet("/logs", async (Database db) =>
     return Results.Ok(rows);
 });
 
-app.MapPost("/log", async (Database db) =>
+app.MapPost("/log", async (Database db, Known known) =>
 {
     //SQL
-    var sql = "";
+    var sql = "INSERT INTO [dbo].[Known] ([KnownId],[IsAllied]) VALUES (@KnownId, @IsAllied)";
 
     //Parameters
     var parameters = new List<SqlParameter>
     {
-        new SqlParameter("@Name", SqlDbType.NVarChar) { Value = "Alice" },
-        new SqlParameter("@Email", SqlDbType.NVarChar) { Value = "alice@example.com" }
+        new SqlParameter("@KnownId", SqlDbType.Int) { Value = known.KnownId },
+        new SqlParameter("@IsAllied", SqlDbType.Int) { Value = known.IsAllied }
     };
 
     //Execute
