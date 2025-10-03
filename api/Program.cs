@@ -3,10 +3,17 @@
 using api;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = "";
+Env.Load(); // Load .env file
+
+var connectionString = $"Server={Environment.GetEnvironmentVariable("DB_SERVER")};" +
+                       $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
+                       $"User Id={Environment.GetEnvironmentVariable("DB_USER")};" +
+                       $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};" +
+                       $"TrustServerCertificate=True;";
 
 builder.Services.AddSingleton(new Database(connectionString));
 
