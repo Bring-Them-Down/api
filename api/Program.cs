@@ -22,6 +22,8 @@ var app = builder.Build();
 
 //----------------- API Endpoints -------------------
 
+//----- Logs
+
 app.MapGet("/", () => "Take Them Down API is Running");
 
 app.MapGet("/logs", async (Database db) =>
@@ -54,6 +56,21 @@ app.MapPost("/log", async (Database db, Known known) =>
     //Result
     return affected > 0 ? Results.Created() : Results.BadRequest("Insert Failed");
 
+});
+
+//----- Image
+
+app.MapPost("/image", async (Database db) =>
+{
+    // SQL
+    var sql = "";
+
+    // Execute
+    var rows = await db.ExecuteQueryAsync(sql);
+
+    var captureId = Convert.ToInt32(rows[0][""]);
+    // Result
+    return Results.Ok(new { CaptureId = captureId });
 });
 
 app.Run();
