@@ -26,10 +26,10 @@ var app = builder.Build();
 
 app.MapGet("/", () => "Take Them Down API is Running");
 
-app.MapGet("/logs", async (Database db) =>
+app.MapGet("/log", async (Database db) =>
 {
     //SQL
-    var sql = "SELECT [KnownId], [IsAllied] FROM [dbo].[Known]";
+    var sql = "SELECT [LogId], [Timestamp], [CaptureId], [DeviceId], [KnownId] FROM [dbo].[Log]";
 
     //Execute
     var rows = await db.ExecuteQueryAsync(sql);
@@ -38,16 +38,19 @@ app.MapGet("/logs", async (Database db) =>
     return Results.Ok(rows);
 });
 
-app.MapPost("/log", async (Database db, Known known) =>
+app.MapPost("/log", async (Database db, Log log) =>
 {
     //SQL
-    var sql = "INSERT INTO [dbo].[Known] ([KnownId],[IsAllied]) VALUES (@KnownId, @IsAllied)";
+    var sql = "INSERT INTO [dbo].[Log] ([LogId],[Timestamp],[CaptureId],[DeviceId],[KnownId]) VALUES (@LogId, @Timestamp, @CaptureId, @DeviceId, @KnownId)";
 
     //Parameters
     var parameters = new List<SqlParameter>
     {
-        new SqlParameter("@KnownId", SqlDbType.Int) { Value = known.KnownId },
-        new SqlParameter("@IsAllied", SqlDbType.Int) { Value = known.IsAllied }
+        new SqlParameter("@LogId", SqlDbType.Int) { Value = log.LogId },
+        new SqlParameter("@Timestamp", SqlDbType.Int) { Value = log.Timestamp },
+        new SqlParameter("@CaptureId", SqlDbType.Int) { Value = log.CaptureId },
+        new SqlParameter("@DeviceId", SqlDbType.Int) { Value = log.DeviceId },
+        new SqlParameter("@KnownId", SqlDbType.Int) { Value = log.KnownId }
     };
 
     //Execute
