@@ -63,7 +63,7 @@ app.MapPost("/log", async (Database db, Known known) =>
 app.MapGet("/img", async (Database db) =>
 {
     //SQL
-    var sql = "SELECT [], [] FROM [dbo].[]";
+    var sql = "SELECT * FROM [dbo].[Snapshot]";
 
     //Execute
     var rows = await db.ExecuteQueryAsync(sql);
@@ -88,7 +88,7 @@ app.MapPost("/image", async (Database db) =>
 app.MapDelete("/image/{id}", async (int id, Database db) =>
 {
     // SQL
-    var sql = "DELETE FROM [dbo].[] WHERE [] = @Id";
+    var sql = "DELETE FROM [dbo].[Snapshot] WHERE [Id] = @Id";
 
     // Parameters
     var parameters = new List<SqlParameter>
