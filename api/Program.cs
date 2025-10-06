@@ -60,6 +60,18 @@ app.MapPost("/log", async (Database db, Known known) =>
 
 //----- Image
 
+app.MapGet("/img", async (Database db) =>
+{
+    //SQL
+    var sql = "SELECT [], [] FROM [dbo].[]";
+
+    //Execute
+    var rows = await db.ExecuteQueryAsync(sql);
+
+    //Result
+    return Results.Ok(rows);
+});
+
 app.MapPost("/image", async (Database db) =>
 {
     // SQL
@@ -71,6 +83,24 @@ app.MapPost("/image", async (Database db) =>
     var captureId = Convert.ToInt32(rows[0][""]);
     // Result
     return Results.Ok(new { CaptureId = captureId });
+});
+
+app.MapDelete("/image/{id}", async (int id, Database db) =>
+{
+    // SQL
+    var sql = "DELETE FROM [dbo].[] WHERE [] = @Id";
+
+    // Parameters
+    var parameters = new List<SqlParameter>
+    {
+        new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+    };
+
+    // Execute
+    var affected = await db.ExecuteNonQueryAsync(sql, parameters);
+
+    // Result
+    return affected > 0 ? Results.Ok() : Results.NotFound();
 });
 
 app.Run();
