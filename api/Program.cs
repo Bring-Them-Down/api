@@ -47,7 +47,7 @@ app.MapPost("/log", async (Database db, Log log) =>
     var parameters = new List<SqlParameter>
     {
         new SqlParameter("@LogId", SqlDbType.Int) { Value = log.LogId },
-        new SqlParameter("@Timestamp", SqlDbType.Int) { Value = log.Timestamp },
+        new SqlParameter("@Timestamp", SqlDbType.DateTime) { Value = log.Timestamp },
         new SqlParameter("@CaptureId", SqlDbType.Int) { Value = log.CaptureId },
         new SqlParameter("@DeviceId", SqlDbType.Int) { Value = log.DeviceId },
         new SqlParameter("@KnownId", SqlDbType.Int) { Value = log.KnownId }
@@ -63,7 +63,7 @@ app.MapPost("/log", async (Database db, Log log) =>
 
 //----- Image
 
-app.MapGet("/img", async (Database db) =>
+app.MapGet("/image", async (Database db) =>
 {
     //SQL
     var sql = "SELECT * FROM [dbo].[Snapshot]";
@@ -75,17 +75,24 @@ app.MapGet("/img", async (Database db) =>
     return Results.Ok(rows);
 });
 
-app.MapPost("/image", async (Database db) =>
+app.MapPost("/image", async (Database db, Snapshot snap) =>
 {
     // SQL
-    var sql = "";
+    var sql = "INSERT INTO [dbo].[Snapshot] ([FileName],[ContentType],[Data]) VALUES (@FileName, @ContentType, @Data) ";
+
+    //Parameters
+    var parameters = new List<SqlParameter>
+    {
+        new SqlParameter("@FileName", SqlDbType.NVarChar) { Value = snap.FileName },
+        new SqlParameter("@ContentType", SqlDbType.NVarChar) { Value = snap.ContentType },
+        new SqlParameter("@Data", SqlDbType.VarBinary) { Value = snap.Data },
+    };
 
     // Execute
-    var rows = await db.ExecuteQueryAsync(sql);
+    var affected = await db.ExecuteNonQueryAsync(sql, parameters);
 
-    var captureId = Convert.ToInt32(rows[0][""]);
     // Result
-    return Results.Ok(new { CaptureId = captureId });
+    return affected > 0 ? Results.Created() : Results.BadRequest("Insert Failed");
 });
 
 app.MapDelete("/image/{id}", async (int id, Database db) =>
