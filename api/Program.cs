@@ -18,7 +18,21 @@ var connectionString = $"Server={Environment.GetEnvironmentVariable("DB_SERVER")
 
 builder.Services.AddSingleton(new Database(connectionString));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowAll");
+
 
 //----------------- API Endpoints -------------------
 
