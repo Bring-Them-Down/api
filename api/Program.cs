@@ -58,6 +58,21 @@ app.MapGet("/log", async (Database db) =>
     return Results.Ok(rows);
 });
 
+app.MapGet("/knownAllies", async (Database db) =>
+{
+    //SQL
+    var sql = """
+        SELECT k.[KnownId], k.[IsAllied]
+        FROM[dbo].[Known] k
+    """;
+
+    //Execute
+    var rows = await db.ExecuteQueryAsync(sql);
+
+    //Result
+    return Results.Ok(rows);
+});
+
 app.MapPost("/log", async (Database db, Log log) =>
 {
     //SQL
