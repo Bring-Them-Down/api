@@ -1,0 +1,13 @@
+﻿@api_HostAddress = https://localhost:7078
+
+GET {{api_HostAddress}}/image
+
+###
+
+POST {{api_HostAddress}}/image
+
+###
+
+DELETE {{api_HostAddress}}/image/{id}
+
+###

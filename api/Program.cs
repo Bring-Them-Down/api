@@ -62,7 +62,7 @@ app.MapPost("/log", async (Database db, Log log) =>
     {
         new SqlParameter("@LogId", SqlDbType.Int) { Value = log.LogId },
         new SqlParameter("@Timestamp", SqlDbType.DateTime) { Value = log.Timestamp },
-        new SqlParameter("@CaptureId", SqlDbType.Int) { Value = log.CaptureId },
+        new SqlParameter("@CaptureId", SqlDbType.Int) { Value = log.CaptureId != null ? log.CaptureId : DBNull.Value },
         new SqlParameter("@DeviceId", SqlDbType.Int) { Value = log.DeviceId },
         new SqlParameter("@KnownId", SqlDbType.Int) { Value = log.KnownId }
     };
