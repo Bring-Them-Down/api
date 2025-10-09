@@ -43,7 +43,13 @@ app.MapGet("/", () => "Take Them Down API is Running");
 app.MapGet("/log", async (Database db) =>
 {
     //SQL
-    var sql = "SELECT [LogId], [Timestamp], [CaptureId], [DeviceId], [KnownId] FROM [dbo].[Log]";
+    var sql = """
+        SELECT l.[LogId], l.[Timestamp], l.[CaptureId], c.[CapTureByte], l.[DeviceId], d.[Name], l.[KnownId], k.[IsAllied] 
+        FROM [dbo].[Log] l 
+        LEFT JOIN [Capture] c ON l.CaptureId = c.CaptureId 
+        LEFT JOIN [Device] d ON l.DeviceId = d.DeviceId 
+        LEFT JOIN [Known] k ON l.KnownId = k.KnownId
+    """;
 
     //Execute
     var rows = await db.ExecuteQueryAsync(sql);
